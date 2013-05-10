@@ -4,9 +4,11 @@
 # - [X] highlight box that is changed by script
 # - [X] turn invalid box red on keypress.enter
 # - [X] allow duration to be entered as 3, :02, 3:
+# - [X] replace hms d3 patterns with RegExps
 # - [ ] keep track of order in which user inputs, calculate accordingly
 # - [X] squash delta math bug
 # - [X] keep delta when edate < sdate
+# - [ ] Don't callback unless values actually change
 
 dateRanger = (init) ->
     iso = d3.time.format.utc("%Y-%m-%d %H:%M")
@@ -21,7 +23,7 @@ dateRanger = (init) ->
         "#{h}:#{m}"#:#{s}"
 
     # Initialize State (don't hate)
-    console.log  init
+    # console.log  init
     # defaults: edate = now, sdate = now - 24hrs
     edate = if (typeof init.edate == 'undefined') then new Date else init.edate
     sdate = if (typeof init.sdate == 'undefined') then new Date else init.sdate
@@ -31,8 +33,6 @@ dateRanger = (init) ->
     edate.setSeconds(0)
     edate.setMilliseconds(0)
     delta = edate - sdate
-    console.log init.sdate
-    console.log(sdate, edate, delta)
     # Set initial datetime input boxes
     $("#info #sdate").val(iso sdate)
     $("#info #delta").val(hms delta)
@@ -100,25 +100,27 @@ dateRanger = (init) ->
 
     in_millisecs = (hms) ->
         # convert various forms of %H:%M to millisecs
-        hms_format = d3.time.format("%H:%M")
-        h_format = d3.time.format("%H")
-        gabe_h_format = d3.time.format("%H:")
-        gabe_m_format = d3.time.format(":%M")
+        hms_format = new RegExp("\d*:\d*")
+        h_format =  new RegExp("\d*")
+        gabe_h_format =  new RegExp("\d*:")
+        gabe_m_format =  new RegExp(":\d*")
+        # could check for bad chars [^\d:\.], but its
+        # not really needed.
 
-        if hms_format.parse hms
+        if hms_format.test(hms)
             hms = hms.split(":")
             ms = +hms[0] * 1000 * 3600  # hours
             ms += +hms[1] * 1000 * 60  # minutes
             return ms
-        if gabe_h_format.parse hms
+        if gabe_h_format.test(hms)
             hms = hms.split(":")
             ms = +hms[0] * 1000 * 3600  # hours
             return ms
-        if gabe_m_format.parse hms
+        if gabe_m_format.test(hms)
             hms = hms.split(":")
             ms = +hms[1] * 1000 * 60  # minutes
             return ms
-        if h_format.parse hms
+        if h_format.test(hms)
             ms = +hms * 1000 * 3600  # hours
             return ms
 
@@ -151,6 +153,7 @@ dateRanger = (init) ->
 
     highlight_error = (id) ->
         $(id).effect("highlight", {color:'orange'}, 500)
+
     clear_highlighting = () ->
         for box in ['#sdate', '#delta', '#edate']
             d3.select(box).classed("error", false)

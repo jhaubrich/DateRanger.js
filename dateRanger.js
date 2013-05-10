@@ -14,7 +14,6 @@ dateRanger = function(init) {
     m = Math.floor(r_secs / 60);
     return "" + h + ":" + m;
   };
-  console.log(init);
   edate = typeof init.edate === 'undefined' ? new Date : init.edate;
   sdate = typeof init.sdate === 'undefined' ? new Date : init.sdate;
   sdate.setSeconds(0);
@@ -22,8 +21,6 @@ dateRanger = function(init) {
   edate.setSeconds(0);
   edate.setMilliseconds(0);
   delta = edate - sdate;
-  console.log(init.sdate);
-  console.log(sdate, edate, delta);
   $("#info #sdate").val(iso(sdate));
   $("#info #delta").val(hms(delta));
   $("#info #edate").val(iso(edate));
@@ -98,27 +95,27 @@ dateRanger = function(init) {
   in_millisecs = function(hms) {
     var gabe_h_format, gabe_m_format, h_format, hms_format, ms;
 
-    hms_format = d3.time.format("%H:%M");
-    h_format = d3.time.format("%H");
-    gabe_h_format = d3.time.format("%H:");
-    gabe_m_format = d3.time.format(":%M");
-    if (hms_format.parse(hms)) {
+    hms_format = new RegExp("\d*:\d*");
+    h_format = new RegExp("\d*");
+    gabe_h_format = new RegExp("\d*:");
+    gabe_m_format = new RegExp(":\d*");
+    if (hms_format.test(hms)) {
       hms = hms.split(":");
       ms = +hms[0] * 1000 * 3600;
       ms += +hms[1] * 1000 * 60;
       return ms;
     }
-    if (gabe_h_format.parse(hms)) {
+    if (gabe_h_format.test(hms)) {
       hms = hms.split(":");
       ms = +hms[0] * 1000 * 3600;
       return ms;
     }
-    if (gabe_m_format.parse(hms)) {
+    if (gabe_m_format.test(hms)) {
       hms = hms.split(":");
       ms = +hms[1] * 1000 * 60;
       return ms;
     }
-    if (h_format.parse(hms)) {
+    if (h_format.test(hms)) {
       ms = +hms * 1000 * 3600;
       return ms;
     }
