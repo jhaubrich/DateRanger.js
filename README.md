@@ -1,5 +1,5 @@
 # DateRanger.js
-I love the keyboard. So do you. Let's not click through datepicker. DateRanger provides sensible date range input aimed at the keyboard that *hopefully* just works.
+See the [example](http://jhaubrich.github.io/DateRanger.js/). I love the keyboard. So do you. Let's not click through datepicker. DateRanger provides sensible date range input aimed at the keyboard that *hopefully* just works.
 
 Dates are always UTC
 
