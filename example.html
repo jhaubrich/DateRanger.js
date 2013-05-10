@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>
+    DateRanger.js Example
+</title>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+<style type="text/css">
+    @import url(//fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700);
+    /*  #info  */
+    #info {
+        margin:auto;
+        width:90%;
+        font-family: "Yanone Kaffeesatz";
+        text-rendering: optimizeLegibility;
+    }
+    #sdate, #delta, #edate {font-size: 1.5em; border: 0;}
+    #info .left { text-align: left; width: 99%; margin:0;}
+    #info .center { text-align: center; width: 99%; margin:0;}
+    #info .right { text-align: right; width: 99%; margin:0;}
+    .error {color:tomato;}
+</style>
+
+<body>
+    <div id="info">
+        <table class="center" style="color: gray;">
+            <thead >
+                <tr>
+                    <th valign=bottom><h3 class="left">start</h3></th>
+                    <th valign=bottom><h3 class="center">∆ H:M</h3></th>
+                    <th valign=bottom><h3 class="right">end</h3></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input id="sdate" class="left"/></td>
+                    <td><input id="delta" class="center"/></td>
+                    <td><input id="edate" class="right"/></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+    <script src='dateRanger.js'></script>
+    <script type="text/javascript">
+        dateRanger({
+            sdate: new Date("May 5, 2013"),  // optional. Default: 24hrs ago
+            edate: new Date(),                        // optional. Default: now
+            focusout: true,                           // optional. Callback when input loses focus. Default: true
+            callback: function (sdate, edate){        // your callback is called when a new date range is calculated.
+                        console.log(sdate, " to ", edate)
+                    }
+        });
+    </script>
+
+</body>
