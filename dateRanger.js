@@ -20,7 +20,7 @@ dateRanger = function(init) {
 
     LastUserInputs.prototype.full_list = ['#sdate', '#delta', '#edate'];
 
-    LastUserInputs.prototype.history = ['#sdate', '#edate'];
+    LastUserInputs.prototype.history = ['#edate', '#sdate'];
 
     LastUserInputs.prototype.update = function(new_id) {
       if (__indexOf.call(this.history, new_id) >= 0) {
@@ -92,7 +92,7 @@ dateRanger = function(init) {
     if (id === 'delta') {
       old_delta = delta;
       delta = get_valid_delta('#delta');
-      if (old_delta - delta !== 0) {
+      if ((old_delta - delta) !== 0) {
         if (delta) {
           suggested = lui.suggest('#delta');
           if (suggested === "#sdate") {
@@ -115,7 +115,7 @@ dateRanger = function(init) {
     if (id === 'sdate') {
       old_sdate = sdate;
       sdate = get_valid_date('#sdate');
-      if (old_sdate - sdate !== 0) {
+      if ((old_sdate - sdate) !== 0) {
         if (sdate) {
           suggested = lui.suggest('#sdate');
           if (suggested === "#delta") {
@@ -142,7 +142,7 @@ dateRanger = function(init) {
     if (id === 'edate') {
       old_edate = edate;
       edate = get_valid_date('#edate');
-      if (old_edate - edate !== 0) {
+      if ((old_edate - edate) !== 0) {
         if (edate) {
           suggested = lui.suggest('#edate');
           if (suggested === "#delta") {
@@ -152,7 +152,7 @@ dateRanger = function(init) {
               highlight_update('#delta');
             } else if (sdate > edate) {
               $('#sdate').val(iso(new Date(edate - delta)));
-              highlight_update('#edate');
+              highlight_update('#sdate');
             }
           }
           if (suggested === "#sdate") {
