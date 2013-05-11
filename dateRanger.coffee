@@ -25,8 +25,9 @@ dateRanger = (init) ->
 
     class LastUserInputs
         full_list: ['#sdate', '#delta', '#edate']
-        history: ['#sdate', '#edate'], # ['#sdate', '#delta'], 
+        history: ['#edate','#sdate'], #['#sdate', '#edate'], # ['#sdate', '#delta'], 
         update: (new_id) ->
+            # console.log @history
             if new_id in @history
                 # Allow user to submit the same id repeatedly
                 # without destroying the history.
@@ -98,7 +99,7 @@ dateRanger = (init) ->
         if id == 'delta'
             old_delta = delta
             delta = get_valid_delta('#delta')
-            if old_delta - delta != 0
+            if (old_delta - delta) != 0
                 if delta  # null if not valid date
                     suggested = lui.suggest('#delta')
                     if suggested is "#sdate"
@@ -119,7 +120,7 @@ dateRanger = (init) ->
         if id == 'sdate'
             old_sdate = sdate
             sdate = get_valid_date('#sdate')
-            if old_sdate - sdate != 0
+            if (old_sdate - sdate) != 0
                 if sdate  # null if not valid date
                     suggested = lui.suggest('#sdate')
                     if suggested is "#delta"
@@ -144,7 +145,7 @@ dateRanger = (init) ->
         if id == 'edate'
             old_edate = edate
             edate = get_valid_date('#edate')
-            if old_edate - edate != 0
+            if (old_edate - edate) != 0
                 if edate  # null if not valid date
                     suggested = lui.suggest('#edate')
                     if suggested is "#delta"
@@ -157,7 +158,7 @@ dateRanger = (init) ->
                             highlight_update '#delta'
                         else if sdate > edate
                             $('#sdate').val(iso new Date(edate - delta))
-                            highlight_update '#edate'
+                            highlight_update '#sdate'
                     if suggested is "#sdate"
                         $('#sdate').val(iso new Date(edate - delta))
                         highlight_update '#sdate'
