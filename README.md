@@ -1,13 +1,26 @@
 # DateRanger.js
-See the [example](http://jhaubrich.github.io/DateRanger.js/). I love the keyboard. So do you. Let's not click through datepicker. DateRanger provides sensible date range input aimed at the keyboard that *hopefully* just works.
+[Checkout the example](http://jhaubrich.github.io/DateRanger.js/). I love the keyboard. So do you. Let's not click through datepicker. DateRanger provides sensible date range input aimed at the keyboard that *hopefully* just works.
 
 Dates are always UTC
 
-## Usage
-Include the script:
-    <script src='dateRanger.js'></script>
+## Features
+- Predicts which values you want to keep, and which you wish changed. (Still needs work)
+- Validation on each keystroke
+- Error and change highlighting
+- Input delta as H:M, H, :M, H:
 
-Specify the initial fields to populate, and a callback.
+## Usage
+Be sure you have three input boxes with the IDs sdate, delta, edate:
+``` html
+    <input id="sdate" />
+    <input id="delta" />
+    <input id="edate" />
+```
+Include the script:
+``` html
+    <script src='dateRanger.js'></script>
+```
+Specify the initial fields to populate and a callback.
 ``` html
     <script src='dateRanger.js'></script>
     <script type="text/javascript">
@@ -27,7 +40,8 @@ Specify the initial fields to populate, and a callback.
 - `focusout` (optional, default: true) - When true, ranges are calculated and callback called when an input loses focus.
 - `callback` (arguments: sdate, edate) - called after date range changes and is validated.
 
-## Building
+## Build
+Coffee script needs to be compiled as bare:
 
     coffee --bare --compile dateRanger.coffee
 
