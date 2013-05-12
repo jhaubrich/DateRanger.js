@@ -74,6 +74,17 @@ dateRanger = (init) ->
       d3.select(delta_box).classed("error", true)
       return no
 
+  has_error = () ->
+    ### Determine if an error has been raised by checking each
+    input box for the error class.
+    ###
+    for input_box in ['#sdate', '#delta', '#edate']
+      if $(input_box).hasClass('error')
+        $(input_box).effect("highlight", {color:'orange'}, 500)
+        return true
+      else no
+
+
   #############################
   # Initialize State (don't hate)
   #############################
@@ -92,6 +103,7 @@ dateRanger = (init) ->
   $("#sdate").val(iso sdate)
   $("#delta").val(hms delta)
   $("#edate").val(iso edate)
+
 
   #############################
   # Event listeners
@@ -202,15 +214,6 @@ dateRanger = (init) ->
         else
           highlight_error("#sdate")
 
-  has_error = () ->
-    ### Determine if an error has been raised by checking each
-    input box for the error class.
-    ###
-    for input_box in ['#sdate', '#delta', '#edate']
-      if $(input_box).hasClass('error')
-        $(input_box).effect("highlight", {color:'orange'}, 500)
-        return true
-      else no
 
   #############################
   # Highlighting effects!

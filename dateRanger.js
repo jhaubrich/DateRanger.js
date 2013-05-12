@@ -95,6 +95,26 @@ dateRanger = function(init) {
       return false;
     }
   };
+  has_error = function() {
+    /* Determine if an error has been raised by checking each
+    input box for the error class.
+    */
+
+    var input_box, _i, _len, _ref;
+
+    _ref = ['#sdate', '#delta', '#edate'];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      input_box = _ref[_i];
+      if ($(input_box).hasClass('error')) {
+        $(input_box).effect("highlight", {
+          color: 'orange'
+        }, 500);
+        return true;
+      } else {
+        false;
+      }
+    }
+  };
   edate = typeof init.edate === 'undefined' ? new Date : init.edate;
   sdate = typeof init.sdate === 'undefined' ? new Date : init.sdate;
   sdate.setSeconds(0);
@@ -215,26 +235,6 @@ dateRanger = function(init) {
         } else {
           return highlight_error("#sdate");
         }
-      }
-    }
-  };
-  has_error = function() {
-    /* Determine if an error has been raised by checking each
-    input box for the error class.
-    */
-
-    var input_box, _i, _len, _ref;
-
-    _ref = ['#sdate', '#delta', '#edate'];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      input_box = _ref[_i];
-      if ($(input_box).hasClass('error')) {
-        $(input_box).effect("highlight", {
-          color: 'orange'
-        }, 500);
-        return true;
-      } else {
-        false;
       }
     }
   };
