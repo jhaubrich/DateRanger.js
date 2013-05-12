@@ -1,18 +1,20 @@
  # requires JQuery, JQueryUI, and d3
 
-# TODO
-# - [X] highlight box that is changed by script
-# - [X] turn invalid box red on keypress.enter
-# - [X] allow duration to be entered as 3, :02, 3:
-# - [X] replace hms d3 patterns with RegExps
-# - [X] keep track of order in which user inputs
-#   - [X] calculate accordingly
-# - [X] squash delta math bug
-# - [X] keep delta when edate < sdate
-# - [X] Don't callback unless values actually change
-
 dateRanger = (init) ->
     iso = d3.time.format.utc("%Y-%m-%d %H:%M")
+    iso.parse = (t) ->
+        parsed_iso = d3.time.format.utc("%Y-%m-%d %H:%M").parse(t)
+        parsed_no_HM = d3.time.format.utc("%Y-%m-%d").parse(t)
+        if parsed_iso then return parsed_iso
+        if parsed_no_HM then return parsed_no_HM
+        return null
+        # traditional style
+        # if parsed_iso
+        #     return parsed_iso
+        # else if parsed_no_HM
+        #     return parsed_no_HM
+        # else
+        #     return null
 
     hms = (millisecs) ->
         # converts millisecs to %H:%M
@@ -25,7 +27,7 @@ dateRanger = (init) ->
 
     class LastUserInputs
         full_list: ['#sdate', '#delta', '#edate']
-        history: ['#edate','#sdate'], #['#sdate', '#edate'], # ['#sdate', '#delta'], 
+        history: ['#edate','#sdate'], #['#sdate', '#edate'], # ['#sdate', '#delta'],
         update: (new_id) ->
             # console.log @history
             if new_id in @history
@@ -43,7 +45,7 @@ dateRanger = (init) ->
             if current_id in @history
                 # find the inputbox the user didn't touch
                 for id in @full_list
-                    if id not in @history 
+                    if id not in @history
                         return id
             else
                 # all three inputs have been changed.
@@ -54,7 +56,7 @@ dateRanger = (init) ->
     # lui unittest:
     # console.log('#delta', lui.suggest('#delta')) # Output: #delta #edate
     # console.log('#sdate', lui.suggest('#sdate')) # Output: #sdate #edate
-    # console.log('#edate', lui.suggest('#edate')) # Output: #edate #sdate 
+    # console.log('#edate', lui.suggest('#edate')) # Output: #edate #sdate
     # TODO: look into javascript unittesting
 
     # Initialize State (don't hate)

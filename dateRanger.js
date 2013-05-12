@@ -6,6 +6,19 @@ dateRanger = function(init) {
   var LastUserInputs, clear_highlighting, delta, edate, get_valid_date, get_valid_delta, has_error, highlight_error, highlight_update, hms, in_millisecs, iso, lui, reset_boxes, sdate, update_boxes;
 
   iso = d3.time.format.utc("%Y-%m-%d %H:%M");
+  iso.parse = function(t) {
+    var parsed_iso, parsed_no_HM;
+
+    parsed_iso = d3.time.format.utc("%Y-%m-%d %H:%M").parse(t);
+    parsed_no_HM = d3.time.format.utc("%Y-%m-%d").parse(t);
+    if (parsed_iso) {
+      return parsed_iso;
+    }
+    if (parsed_no_HM) {
+      return parsed_no_HM;
+    }
+    return null;
+  };
   hms = function(millisecs) {
     var h, m, r_secs, seconds;
 
