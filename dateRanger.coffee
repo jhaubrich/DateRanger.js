@@ -1,4 +1,21 @@
- # requires JQuery, JQueryUI, and d3
+# requires JQuery, JQueryUI, and d3
+
+### Date range selector with a sixth sense.
+
+Needs to be compiled with `--bare`
+  coffee --bare --compile dateRanger.coffee
+
+# Options
+- `sdate` (optional, default: 24rs ago) - Initial value for the
+starting date.
+- `edate` (optional, default: now) - Initial value for the ending
+date.
+- `focusout` (optional, default: true) - When true, ranges are
+calculated and callback
+called when an input loses focus.
+- `callback` (arguments: sdate, edate) - called after date range
+changes and is validated.
+###
 
 dateRanger = (init) ->
   ##############################
@@ -22,9 +39,8 @@ dateRanger = (init) ->
     return "#{h}:#{m}"#:#{s}"
 
   in_millisecs = () ->
-    ### convert various forms of %H:%M to millisecs
-    we use a closure so RegExp objects on created
-    on every keystroke
+    ### convert various forms of %H:%M to millisecs we use a closure
+    so RegExp objects on created on every keystroke.
     ###
     hms_format = new RegExp("\d*:\d*")
     h_format =  new RegExp("\d*")
@@ -49,6 +65,7 @@ dateRanger = (init) ->
         ms = +hms * 1000 * 3600  # hours
         return ms
   in_millisecs = in_millisecs()
+
 
   #############################
   # Date validators
@@ -234,7 +251,7 @@ dateRanger = (init) ->
     and provide suggestions.
     ###
     full_list: ['#sdate', '#delta', '#edate']
-    history: ['#edate','#sdate'], #['#sdate', '#edate'], # ['#sdate', '#delta'],
+    history: ['#sdate','#edate'], #['#sdate', '#edate'], # ['#sdate', '#delta'],
     update: (new_id) ->
       # console.log @history
       if new_id in @history
