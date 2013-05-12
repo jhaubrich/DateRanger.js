@@ -28,43 +28,73 @@ dateRanger = function(init) {
     m = Math.floor(r_secs / 60);
     return "" + h + ":" + m;
   };
-  LastUserInputs = (function() {
-    function LastUserInputs() {}
+  in_millisecs = function() {
+    /* convert various forms of %H:%M to millisecs
+    we use a closure so RegExp objects on created
+    on every keystroke
+    */
 
-    LastUserInputs.prototype.full_list = ['#sdate', '#delta', '#edate'];
+    var gabe_h_format, gabe_m_format, h_format, hms_format;
 
-    LastUserInputs.prototype.history = ['#edate', '#sdate'];
+    hms_format = new RegExp("\d*:\d*");
+    h_format = new RegExp("\d*");
+    gabe_h_format = new RegExp("\d*:");
+    gabe_m_format = new RegExp(":\d*");
+    return function(hms) {
+      var ms;
 
-    LastUserInputs.prototype.update = function(new_id) {
-      if (__indexOf.call(this.history, new_id) >= 0) {
-        return this.history;
-      } else {
-        this.history.push(new_id);
-        this.history = this.history.slice(-2);
-        return this.history;
+      if (hms_format.test(hms)) {
+        hms = hms.split(":");
+        ms = +hms[0] * 1000 * 3600;
+        ms += +hms[1] * 1000 * 60;
+        return ms;
+      }
+      if (gabe_h_format.test(hms)) {
+        hms = hms.split(":");
+        ms = +hms[0] * 1000 * 3600;
+        return ms;
+      }
+      if (gabe_m_format.test(hms)) {
+        hms = hms.split(":");
+        ms = +hms[1] * 1000 * 60;
+        return ms;
+      }
+      if (h_format.test(hms)) {
+        ms = +hms * 1000 * 3600;
+        return ms;
       }
     };
+  };
+  in_millisecs = in_millisecs();
+  get_valid_date = function(active_box) {
+    /* pull timestamp from input box and convert to date obj
+    */
 
-    LastUserInputs.prototype.suggest = function(current_id) {
-      var id, _i, _len, _ref;
+    var timestamp;
 
-      if (__indexOf.call(this.history, current_id) >= 0) {
-        _ref = this.full_list;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          id = _ref[_i];
-          if (__indexOf.call(this.history, id) < 0) {
-            return id;
-          }
-        }
-      } else {
-        return this.history[0];
-      }
-    };
+    timestamp = iso.parse($(active_box).val());
+    if (timestamp === null) {
+      d3.select(active_box).classed("error", true);
+      return false;
+    } else {
+      d3.select(active_box).classed("error", false);
+      return timestamp;
+    }
+  };
+  get_valid_delta = function(delta_box) {
+    /* pull timestamp from input box and convert to date obj
+    */
 
-    return LastUserInputs;
+    var ms;
 
-  })();
-  lui = new LastUserInputs;
+    if (ms = in_millisecs($(delta_box).val())) {
+      d3.select(delta_box).classed("error", false);
+      return ms;
+    } else {
+      d3.select(delta_box).classed("error", true);
+      return false;
+    }
+  };
   edate = typeof init.edate === 'undefined' ? new Date : init.edate;
   sdate = typeof init.sdate === 'undefined' ? new Date : init.sdate;
   sdate.setSeconds(0);
@@ -99,6 +129,14 @@ dateRanger = function(init) {
       }
     });
   }
+  reset_boxes = function() {
+    /* reset defaults
+    */
+    $('#sdate').val(iso(sdate));
+    $('#delta').val(hms(delta));
+    $('#edate').val(iso(edate));
+    return clear_highlighting();
+  };
   update_boxes = function(id) {
     var old_delta, old_edate, old_sdate, suggested;
 
@@ -180,69 +218,11 @@ dateRanger = function(init) {
       }
     }
   };
-  reset_boxes = function() {
-    $('#sdate').val(iso(sdate));
-    $('#delta').val(hms(delta));
-    $('#edate').val(iso(edate));
-    return clear_highlighting();
-  };
-  in_millisecs = function() {
-    var gabe_h_format, gabe_m_format, h_format, hms_format;
-
-    hms_format = new RegExp("\d*:\d*");
-    h_format = new RegExp("\d*");
-    gabe_h_format = new RegExp("\d*:");
-    gabe_m_format = new RegExp(":\d*");
-    return function(hms) {
-      var ms;
-
-      if (hms_format.test(hms)) {
-        hms = hms.split(":");
-        ms = +hms[0] * 1000 * 3600;
-        ms += +hms[1] * 1000 * 60;
-        return ms;
-      }
-      if (gabe_h_format.test(hms)) {
-        hms = hms.split(":");
-        ms = +hms[0] * 1000 * 3600;
-        return ms;
-      }
-      if (gabe_m_format.test(hms)) {
-        hms = hms.split(":");
-        ms = +hms[1] * 1000 * 60;
-        return ms;
-      }
-      if (h_format.test(hms)) {
-        ms = +hms * 1000 * 3600;
-        return ms;
-      }
-    };
-  };
-  in_millisecs = in_millisecs();
-  get_valid_date = function(active_box) {
-    var timestamp;
-
-    timestamp = iso.parse($(active_box).val());
-    if (timestamp === null) {
-      d3.select(active_box).classed("error", true);
-      return false;
-    } else {
-      d3.select(active_box).classed("error", false);
-      return timestamp;
-    }
-  };
-  get_valid_delta = function(delta_box) {
-    var ms;
-
-    if (ms = in_millisecs($(delta_box).val())) {
-      d3.select(delta_box).classed("error", false);
-      return ms;
-    } else {
-      d3.select(delta_box).classed("error", true);
-      return false;
-    }
-  };
   has_error = function() {
+    /* Determine if an error has been raised by checking each
+    input box for the error class.
+    */
+
     var input_box, _i, _len, _ref;
 
     _ref = ['#sdate', '#delta', '#edate'];
@@ -268,7 +248,7 @@ dateRanger = function(init) {
       color: 'lightblue'
     }, 1500);
   };
-  return clear_highlighting = function() {
+  clear_highlighting = function() {
     var box, _i, _len, _ref, _results;
 
     _ref = ['#sdate', '#delta', '#edate'];
@@ -279,4 +259,46 @@ dateRanger = function(init) {
     }
     return _results;
   };
+  LastUserInputs = (function() {
+    function LastUserInputs() {}
+
+    /* keep track of the order in which boxes are edited,
+    and provide suggestions.
+    */
+
+
+    LastUserInputs.prototype.full_list = ['#sdate', '#delta', '#edate'];
+
+    LastUserInputs.prototype.history = ['#edate', '#sdate'];
+
+    LastUserInputs.prototype.update = function(new_id) {
+      if (__indexOf.call(this.history, new_id) >= 0) {
+        return this.history;
+      } else {
+        this.history.push(new_id);
+        this.history = this.history.slice(-2);
+        return this.history;
+      }
+    };
+
+    LastUserInputs.prototype.suggest = function(current_id) {
+      var id, _i, _len, _ref;
+
+      if (__indexOf.call(this.history, current_id) >= 0) {
+        _ref = this.full_list;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          id = _ref[_i];
+          if (__indexOf.call(this.history, id) < 0) {
+            return id;
+          }
+        }
+      } else {
+        return this.history[0];
+      }
+    };
+
+    return LastUserInputs;
+
+  })();
+  return lui = new LastUserInputs;
 };
