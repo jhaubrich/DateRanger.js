@@ -1,5 +1,3 @@
-# requires JQuery, JQueryUI, and d3
-
 ### Date range selector with a sixth sense.
 
 Needs to be compiled with `--bare`
@@ -17,10 +15,13 @@ called when an input loses focus.
 changes and is validated.
 ###
 
+# requires JQuery, JQueryUI, and d3
+
+
 dateRanger = (init) ->
-  ##############################
+  ####################################################################
   # Date and Time Parsers
-  ##############################
+  ####################################################################
   iso = d3.time.format.utc("%Y-%m-%d %H:%M")
   iso.parse = (t) ->
     parsed_iso = d3.time.format.utc("%Y-%m-%d %H:%M").parse(t)
@@ -38,9 +39,9 @@ dateRanger = (init) ->
     # s = Math.floor(r_secs % 60)
     return "#{h}:#{m}"#:#{s}"
 
-  in_millisecs = () ->
-    ### convert various forms of %H:%M to millisecs we use a closure
-    so RegExp objects on created on every keystroke.
+  in_millisecs =  do () ->
+    ### convert various forms of %H:%M to millisecs.
+    We use a closure so RegExp objects on created on every keystroke.
     ###
     hms_format = new RegExp("\d*:\d*")
     h_format =  new RegExp("\d*")
@@ -64,12 +65,11 @@ dateRanger = (init) ->
       if h_format.test(hms)
         ms = +hms * 1000 * 3600  # hours
         return ms
-  in_millisecs = in_millisecs()
 
 
-  #############################
+  ####################################################################
   # Date validators
-  #############################
+  ####################################################################
   get_valid_date = (active_box) ->
     ### pull timestamp from input box and convert to date obj
     ###
@@ -102,9 +102,9 @@ dateRanger = (init) ->
       else no
 
 
-  #############################
+  ####################################################################
   # Initialize State (don't hate)
-  #############################
+  ####################################################################
   # console.log  init
   # defaults: edate = now, sdate = now - 24hrs
   edate = if (typeof init.edate == 'undefined') then new Date else init.edate
@@ -122,12 +122,12 @@ dateRanger = (init) ->
   $("#edate").val(iso edate)
 
 
-  #############################
+  ####################################################################
   # Event listeners
-  #############################
+  ####################################################################
   $('#info input').keyup (event) ->
     if event.keyCode == 13 # Enter Key
-      if not has_error()
+      if !has_error()
         if update_boxes(event.target.id)
           init.callback(sdate, edate)
     else if event.keyCode == 27  # Escape Key
@@ -140,14 +140,14 @@ dateRanger = (init) ->
 
   if init.focusout == true
     $('#info input').focusout (event) ->
-      if not has_error()
+      if !has_error()
         if update_boxes(event.target.id)
           init.callback(sdate, edate)
 
 
-  #############################
+  ####################################################################
   # Input box manipulators
-  #############################
+  ####################################################################
   reset_boxes = () ->
     ### reset defaults
     ###
@@ -232,9 +232,9 @@ dateRanger = (init) ->
           highlight_error("#sdate")
 
 
-  #############################
+  ####################################################################
   # Highlighting effects!
-  #############################
+  ####################################################################
   highlight_error = (id) ->
     $(id).effect("highlight", {color:'orange'}, 100)
 
@@ -246,6 +246,9 @@ dateRanger = (init) ->
       d3.select(box).classed("error", false)
 
 
+  ####################################################################
+  #
+  ####################################################################
   class LastUserInputs
     ### keep track of the order in which boxes are edited,
     and provide suggestions.

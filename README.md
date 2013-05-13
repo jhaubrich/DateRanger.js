@@ -4,9 +4,9 @@ I love the keyboard. So do you. Let's not click through datepicker. DateRanger.j
 [See it in action!](http://jhaubrich.github.io/DateRanger.js/).
 
 ## Features
-- Predicts which values you want to keep, and which you wish changed. (Still needs work)
-- Validation on each keystroke
-- Error and change highlighting
+- Predicts which values you want to keep, and which you wish changed.
+- Validation on every keystroke
+- Error and calculation indicators
 - Input delta as H:M, H, :M, H:
 
 ## Usage
@@ -25,7 +25,7 @@ Specify the initial fields to populate and a callback.
     <script src='dateRanger.js'></script>
     <script type="text/javascript">
         dateRanger({
-            sdate: new Date("May 5, 2013"),  // optional. Default: 24hrs ago
+            sdate: new Date("May 5, 2012"),  // optional. Default: 24hrs ago
             edate: new Date(),               // optional. Default: now
             focusout: false,                 // optional. Default: true
             callback: function (sdate, edate){

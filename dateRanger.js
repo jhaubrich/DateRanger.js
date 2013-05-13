@@ -45,9 +45,9 @@ dateRanger = function(init) {
     m = Math.floor(r_secs / 60);
     return "" + h + ":" + m;
   };
-  in_millisecs = function() {
-    /* convert various forms of %H:%M to millisecs we use a closure
-    so RegExp objects on created on every keystroke.
+  in_millisecs = (function() {
+    /* convert various forms of %H:%M to millisecs.
+    We use a closure so RegExp objects on created on every keystroke.
     */
 
     var gabe_h_format, gabe_m_format, h_format, hms_format;
@@ -80,8 +80,7 @@ dateRanger = function(init) {
         return ms;
       }
     };
-  };
-  in_millisecs = in_millisecs();
+  })();
   get_valid_date = function(active_box) {
     /* pull timestamp from input box and convert to date obj
     */
