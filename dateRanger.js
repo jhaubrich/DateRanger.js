@@ -52,10 +52,10 @@ dateRanger = function(init) {
 
     var gabe_h_format, gabe_m_format, h_format, hms_format;
 
-    hms_format = new RegExp("\d*:\d*");
-    h_format = new RegExp("\d*");
-    gabe_h_format = new RegExp("\d*:");
-    gabe_m_format = new RegExp(":\d*");
+    hms_format = new RegExp(/\d+:\d+/);
+    h_format = new RegExp(/\d+/);
+    gabe_h_format = new RegExp(/\d+:/);
+    gabe_m_format = new RegExp(/:\d+/);
     return function(hms) {
       var ms;
 

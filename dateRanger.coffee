@@ -39,14 +39,14 @@ dateRanger = (init) ->
     # s = Math.floor(r_secs % 60)
     return "#{h}:#{m}"#:#{s}"
 
-  in_millisecs =  do () ->
+  in_millisecs = do () ->
     ### convert various forms of %H:%M to millisecs.
     We use a closure so RegExp objects on created on every keystroke.
     ###
-    hms_format = new RegExp("\d*:\d*")
-    h_format =  new RegExp("\d*")
-    gabe_h_format =  new RegExp("\d*:")
-    gabe_m_format =  new RegExp(":\d*")
+    hms_format = new RegExp(/\d+:\d+/)
+    h_format = new RegExp(/\d+/)
+    gabe_h_format = new RegExp(/\d+:/)
+    gabe_m_format = new RegExp(/:\d+/)
     # could check for bad chars [^\d:\.]... meh
     return (hms) ->
       if hms_format.test(hms)
@@ -116,7 +116,7 @@ dateRanger = (init) ->
   edate.setMilliseconds(0)
   delta = edate - sdate
 
-  # Set initigal datetime input boxes
+  # Set initial datetime input boxes
   $("#sdate").val(iso sdate)
   $("#delta").val(hms delta)
   $("#edate").val(iso edate)
@@ -159,7 +159,7 @@ dateRanger = (init) ->
   update_boxes = (id) ->
     # Decide which boxes to update and how.
     # FIXME: There is allot of code duplication that
-    # should be turfed out to functions.
+    # needs to be turfed to functions.
     if id == 'delta'
       old_delta = delta
       delta = get_valid_delta('#delta')
