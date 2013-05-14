@@ -108,7 +108,7 @@ dateRanger = (init) ->
   # console.log  init
   # defaults: edate = now, sdate = now - 24hrs
   edate = if (typeof init.edate == 'undefined') then new Date else init.edate
-  sdate = if (typeof init.sdate == 'undefined') then new Date else init.sdate
+  sdate = if (typeof init.sdate == 'undefined') then new Date(edate - 3600 * 24 * 1000) else init.sdate
   # since we don't deal with seconds, having them is havoc
   sdate.setSeconds(0)
   sdate.setMilliseconds(0)
@@ -176,7 +176,7 @@ dateRanger = (init) ->
             edate = new Date(+sdate + delta)
             $('#edate').val(iso edate)
             highlight_update '#edate'
-          lui.update("#delta")
+          lui.updated("#delta")
           return yes
         else
           highlight_error("#delta")
@@ -201,7 +201,7 @@ dateRanger = (init) ->
             # update edate
             $('#edate').val(iso new Date(+sdate + delta))
             highlight_update '#edate'
-          lui.update("#sdate")
+          lui.updated("#sdate")
           return yes
         else
           highlight_error("#sdate")
@@ -226,7 +226,7 @@ dateRanger = (init) ->
             # update #sdate
             $('#sdate').val(iso new Date(edate - delta))
             highlight_update '#sdate'
-          lui.update("#edate")
+          lui.updated("#edate")
           return yes
         else
           highlight_error("#sdate")
@@ -247,38 +247,65 @@ dateRanger = (init) ->
 
 
   ####################################################################
-  #
+  # Sixth Sense DateRange
   ####################################################################
   class LastUserInputs
     ### keep track of the order in which boxes are edited,
     and provide suggestions.
     ###
     full_list: ['#sdate', '#delta', '#edate']
-    history: ['#sdate','#edate'], #['#sdate', '#edate'], # ['#sdate', '#delta'],
-    update: (new_id) ->
-      # console.log @history
+    first_change: ['#delta', '#sdate'],  # init state
+    history: []
+    updated: (new_id) ->
+      console.log "Based on history:", @history
       if new_id in @history
-        # Allow user to submit the same id repeatedly
-        # without destroying the history.
-        # e.g. ["#delta", "#delta"]
+        ### Allow user to submit the same id repeatedly
+        without destroying the history.
+        ###
         return @history
       else
         @history.push(new_id)
         @history = @history[-2..]  # keep only last 2
         return @history
 
+    absent: (list) ->
+      ### return the first value in full_list, not in argument list
+      ###
+      for id in @full_list
+        if id not in list
+          return id
+
     suggest: (current_id) ->
-      # Smartly suggests the input box to be changed.
+      ### Smartly suggests the input box to be changed.
+      ###
+      console.log "history.length = ", @history.length
+
+      if @history.length == 0
+        if current_id in @first_change
+          if current_id != @first_change[0]
+            return @first_change[0]
+          else
+            return @first_change[1]
+        else
+          return @first_change[0]
+
+      if @history.length == 1
+        if absent_id = @absent(@history.concat current_id)
+          console.log "absent_id", absent_id
+          return absent_id
+        else
+          console.log "here"
+          return @first_change[0]
+
       if current_id in @history
         # find the inputbox the user didn't touch
-        for id in @full_list
-          if id not in @history
-            return id
+        return @absent(@history)
       else
         # all three inputs have been changed.
         # Suggest changing the oldest.
         return @history[0]
   lui = new LastUserInputs
+
   # lui unittest:
   # console.log('#delta', lui.suggest('#delta')) # Output: #delta #edate
   # console.log('#sdate', lui.suggest('#sdate')) # Output: #sdate #edate

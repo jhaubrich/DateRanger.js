@@ -131,7 +131,7 @@ dateRanger = function(init) {
     }
   };
   edate = typeof init.edate === 'undefined' ? new Date : init.edate;
-  sdate = typeof init.sdate === 'undefined' ? new Date : init.sdate;
+  sdate = typeof init.sdate === 'undefined' ? new Date(edate - 3600 * 24 * 1000) : init.sdate;
   sdate.setSeconds(0);
   sdate.setMilliseconds(0);
   edate.setSeconds(0);
@@ -191,7 +191,7 @@ dateRanger = function(init) {
             $('#edate').val(iso(edate));
             highlight_update('#edate');
           }
-          lui.update("#delta");
+          lui.updated("#delta");
           return true;
         } else {
           highlight_error("#delta");
@@ -218,7 +218,7 @@ dateRanger = function(init) {
             $('#edate').val(iso(new Date(+sdate + delta)));
             highlight_update('#edate');
           }
-          lui.update("#sdate");
+          lui.updated("#sdate");
           return true;
         } else {
           highlight_error("#sdate");
@@ -245,7 +245,7 @@ dateRanger = function(init) {
             $('#sdate').val(iso(new Date(edate - delta)));
             highlight_update('#sdate');
           }
-          lui.update("#edate");
+          lui.updated("#edate");
           return true;
         } else {
           return highlight_error("#sdate");
@@ -284,10 +284,17 @@ dateRanger = function(init) {
 
     LastUserInputs.prototype.full_list = ['#sdate', '#delta', '#edate'];
 
-    LastUserInputs.prototype.history = ['#sdate', '#edate'];
+    LastUserInputs.prototype.first_change = ['#delta', '#sdate'];
 
-    LastUserInputs.prototype.update = function(new_id) {
+    LastUserInputs.prototype.history = [];
+
+    LastUserInputs.prototype.updated = function(new_id) {
+      console.log("Based on history:", this.history);
       if (__indexOf.call(this.history, new_id) >= 0) {
+        /* Allow user to submit the same id repeatedly
+        without destroying the history.
+        */
+
         return this.history;
       } else {
         this.history.push(new_id);
@@ -296,17 +303,50 @@ dateRanger = function(init) {
       }
     };
 
-    LastUserInputs.prototype.suggest = function(current_id) {
+    LastUserInputs.prototype.absent = function(list) {
+      /* return the first value in full_list, not in argument list
+      */
+
       var id, _i, _len, _ref;
 
-      if (__indexOf.call(this.history, current_id) >= 0) {
-        _ref = this.full_list;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          id = _ref[_i];
-          if (__indexOf.call(this.history, id) < 0) {
-            return id;
-          }
+      _ref = this.full_list;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        id = _ref[_i];
+        if (__indexOf.call(list, id) < 0) {
+          return id;
         }
+      }
+    };
+
+    LastUserInputs.prototype.suggest = function(current_id) {
+      /* Smartly suggests the input box to be changed.
+      */
+
+      var absent_id;
+
+      console.log("history.length = ", this.history.length);
+      if (this.history.length === 0) {
+        if (__indexOf.call(this.first_change, current_id) >= 0) {
+          if (current_id !== this.first_change[0]) {
+            return this.first_change[0];
+          } else {
+            return this.first_change[1];
+          }
+        } else {
+          return this.first_change[0];
+        }
+      }
+      if (this.history.length === 1) {
+        if (absent_id = this.absent(this.history.concat(current_id))) {
+          console.log("absent_id", absent_id);
+          return absent_id;
+        } else {
+          console.log("here");
+          return this.first_change[0];
+        }
+      }
+      if (__indexOf.call(this.history, current_id) >= 0) {
+        return this.absent(this.history);
       } else {
         return this.history[0];
       }
