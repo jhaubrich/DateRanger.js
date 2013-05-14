@@ -257,7 +257,6 @@ dateRanger = (init) ->
     first_change: ['#delta', '#sdate'],  # init state
     history: []
     updated: (new_id) ->
-      console.log "Based on history:", @history
       if new_id in @history
         ### Allow user to submit the same id repeatedly
         without destroying the history.
@@ -278,8 +277,6 @@ dateRanger = (init) ->
     suggest: (current_id) ->
       ### Smartly suggests the input box to be changed.
       ###
-      console.log "history.length = ", @history.length
-
       if @history.length == 0
         if current_id in @first_change
           if current_id != @first_change[0]
@@ -291,10 +288,8 @@ dateRanger = (init) ->
 
       if @history.length == 1
         if absent_id = @absent(@history.concat current_id)
-          console.log "absent_id", absent_id
           return absent_id
         else
-          console.log "here"
           return @first_change[0]
 
       if current_id in @history

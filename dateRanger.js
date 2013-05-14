@@ -289,7 +289,6 @@ dateRanger = function(init) {
     LastUserInputs.prototype.history = [];
 
     LastUserInputs.prototype.updated = function(new_id) {
-      console.log("Based on history:", this.history);
       if (__indexOf.call(this.history, new_id) >= 0) {
         /* Allow user to submit the same id repeatedly
         without destroying the history.
@@ -324,7 +323,6 @@ dateRanger = function(init) {
 
       var absent_id;
 
-      console.log("history.length = ", this.history.length);
       if (this.history.length === 0) {
         if (__indexOf.call(this.first_change, current_id) >= 0) {
           if (current_id !== this.first_change[0]) {
@@ -338,10 +336,8 @@ dateRanger = function(init) {
       }
       if (this.history.length === 1) {
         if (absent_id = this.absent(this.history.concat(current_id))) {
-          console.log("absent_id", absent_id);
           return absent_id;
         } else {
-          console.log("here");
           return this.first_change[0];
         }
       }

@@ -1,7 +1,7 @@
 # DateRanger.js
 I love the keyboard. So do you. Let's not click through datepicker. DateRanger.js provides sixth sense date range input that *just works.*
 
-[See it in action!](http://jhaubrich.github.io/DateRanger.js/).
+[See it in action!](http://jhaubrich.github.io/DateRanger.js/)
 
 ## Features
 - Predicts which values you want to keep, and which you wish changed.
