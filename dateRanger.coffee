@@ -301,9 +301,3 @@ dateRanger = (init) ->
         return @history[0]
   lui = new LastUserInputs
 
-  # lui unittest:
-  # console.log('#delta', lui.suggest('#delta')) # Output: #delta #edate
-  # console.log('#sdate', lui.suggest('#sdate')) # Output: #sdate #edate
-  # console.log('#edate', lui.suggest('#edate')) # Output: #edate #sdate
-  # TODO: look into javascript unittesting
-
