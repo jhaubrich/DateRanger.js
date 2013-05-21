@@ -145,7 +145,6 @@ dateRanger = function(init) {
     if (event.keyCode === 13) {
       if (!has_error()) {
         if (update_boxes(event.target.id)) {
-          console.log("" + sdate + " to " + edate);
           return init.callback(sdate, edate);
         }
       }
