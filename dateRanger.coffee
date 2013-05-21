@@ -121,12 +121,10 @@ dateRanger = (init) ->
   $("#delta").val(hms delta)
   $("#edate").val(iso edate)
 
-
   ####################################################################
   # Event listeners
   ####################################################################
   $('#info input').keyup (event) ->
-    console.log "#{sdate} to #{edate}"
     if event.keyCode == 13 # Enter Key
       if !has_error()
         if update_boxes(event.target.id)
@@ -305,4 +303,13 @@ dateRanger = (init) ->
         # Suggest changing the oldest.
         return @history[0]
   lui = new LastUserInputs
+
+  return update_state = (s, e) ->
+    sdate = s
+    edate = e
+    delta = edate - sdate
+    $("#sdate").val(iso sdate)
+    $("#delta").val(hms delta)
+    $("#edate").val(iso edate)
+    highlight_update '#delta'
 

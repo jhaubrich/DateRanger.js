@@ -20,7 +20,7 @@ var dateRanger,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 dateRanger = function(init) {
-  var LastUserInputs, clear_highlighting, delta, edate, get_valid_date, get_valid_delta, has_error, highlight_error, highlight_update, hms, in_millisecs, iso, lui, reset_boxes, sdate, update_boxes;
+  var LastUserInputs, clear_highlighting, delta, edate, get_valid_date, get_valid_delta, has_error, highlight_error, highlight_update, hms, in_millisecs, iso, lui, reset_boxes, sdate, update_boxes, update_state;
 
   iso = d3.time.format.utc("%Y-%m-%d %H:%M");
   iso.parse = function(t) {
@@ -141,7 +141,6 @@ dateRanger = function(init) {
   $("#delta").val(hms(delta));
   $("#edate").val(iso(edate));
   $('#info input').keyup(function(event) {
-    console.log("" + sdate + " to " + edate);
     if (event.keyCode === 13) {
       if (!has_error()) {
         if (update_boxes(event.target.id)) {
@@ -356,5 +355,14 @@ dateRanger = function(init) {
     return LastUserInputs;
 
   })();
-  return lui = new LastUserInputs;
+  lui = new LastUserInputs;
+  return update_state = function(s, e) {
+    sdate = s;
+    edate = e;
+    delta = edate - sdate;
+    $("#sdate").val(iso(sdate));
+    $("#delta").val(hms(delta));
+    $("#edate").val(iso(edate));
+    return highlight_update('#delta');
+  };
 };
