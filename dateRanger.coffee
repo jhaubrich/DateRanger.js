@@ -39,7 +39,7 @@ dateRanger = (init) ->
     # s = Math.floor(r_secs % 60)
     return "#{h}:#{m}"#:#{s}"
 
-  in_millisecs = do () ->
+  in_millisecs = do ->
     ### convert various forms of %H:%M to millisecs.
     We use a closure so RegExp objects on created on every keystroke.
     ###
@@ -91,7 +91,7 @@ dateRanger = (init) ->
       d3.select(delta_box).classed("error", true)
       return no
 
-  has_error = () ->
+  has_error = ->
     ### Determine if an error has been raised by checking each
     input box for the error class.
     ###
@@ -148,7 +148,7 @@ dateRanger = (init) ->
   ####################################################################
   # Input box manipulators
   ####################################################################
-  reset_boxes = () ->
+  reset_boxes = ->
     ### reset defaults
     ###
     $('#sdate').val(iso sdate)
@@ -241,7 +241,7 @@ dateRanger = (init) ->
   highlight_update = (id) ->
     $(id).effect("highlight", {color:'lightblue'}, 1500)
 
-  clear_highlighting = () ->
+  clear_highlighting = ->
     for box in ['#sdate', '#delta', '#edate']
       d3.select(box).classed("error", false)
 
