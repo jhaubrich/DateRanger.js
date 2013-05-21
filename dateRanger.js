@@ -141,9 +141,11 @@ dateRanger = function(init) {
   $("#delta").val(hms(delta));
   $("#edate").val(iso(edate));
   $('#info input').keyup(function(event) {
+    console.log("" + sdate + " to " + edate);
     if (event.keyCode === 13) {
       if (!has_error()) {
         if (update_boxes(event.target.id)) {
+          console.log("" + sdate + " to " + edate);
           return init.callback(sdate, edate);
         }
       }
@@ -210,12 +212,14 @@ dateRanger = function(init) {
               $('#delta').val(hms(delta));
               highlight_update('#delta');
             } else if (sdate > edate) {
-              $('#edate').val(iso(new Date(+sdate + delta)));
+              edate = new Date(+sdate + delta);
+              $('#edate').val(iso(edate));
               highlight_update('#edate');
             }
           }
           if (suggested === "#edate") {
-            $('#edate').val(iso(new Date(+sdate + delta)));
+            edate = new Date(+sdate + delta);
+            $('#edate').val(iso(edate));
             highlight_update('#edate');
           }
           lui.updated("#sdate");
@@ -237,12 +241,14 @@ dateRanger = function(init) {
               $('#delta').val(hms(delta));
               highlight_update('#delta');
             } else if (sdate > edate) {
-              $('#sdate').val(iso(new Date(edate - delta)));
+              sdate = new Date(edate - delta);
+              $('#sdate').val(iso(sdate));
               highlight_update('#sdate');
             }
           }
           if (suggested === "#sdate") {
-            $('#sdate').val(iso(new Date(edate - delta)));
+            sdate = new Date(edate - delta);
+            $('#sdate').val(iso(sdate));
             highlight_update('#sdate');
           }
           lui.updated("#edate");

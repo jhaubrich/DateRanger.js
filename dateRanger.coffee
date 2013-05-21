@@ -126,9 +126,11 @@ dateRanger = (init) ->
   # Event listeners
   ####################################################################
   $('#info input').keyup (event) ->
+    console.log "#{sdate} to #{edate}"
     if event.keyCode == 13 # Enter Key
       if !has_error()
         if update_boxes(event.target.id)
+          console.log "#{sdate} to #{edate}"
           init.callback(sdate, edate)
     else if event.keyCode == 27  # Escape Key
       reset_boxes()
@@ -195,11 +197,13 @@ dateRanger = (init) ->
               highlight_update '#delta'
             else if sdate > edate
               # update edate
-              $('#edate').val(iso new Date(+sdate + delta))
+              edate = new Date(+sdate + delta)
+              $('#edate').val(iso edate)
               highlight_update '#edate'
           if suggested is "#edate"
             # update edate
-            $('#edate').val(iso new Date(+sdate + delta))
+            edate = new Date(+sdate + delta)
+            $('#edate').val(iso edate)
             highlight_update '#edate'
           lui.updated("#sdate")
           return yes
@@ -220,11 +224,13 @@ dateRanger = (init) ->
               highlight_update '#delta'
             else if sdate > edate
               # update #sdate
-              $('#sdate').val(iso new Date(edate - delta))
+              sdate = new Date(edate - delta)
+              $('#sdate').val(iso sdate)
               highlight_update '#sdate'
           if suggested is "#sdate"
             # update #sdate
-            $('#sdate').val(iso new Date(edate - delta))
+            sdate = new Date(edate - delta)
+            $('#sdate').val(iso sdate)
             highlight_update '#sdate'
           lui.updated("#edate")
           return yes
