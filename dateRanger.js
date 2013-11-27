@@ -288,7 +288,7 @@ dateRanger = function(init) {
 
     LastUserInputs.prototype.full_list = ['#sdate', '#delta', '#edate'];
 
-    LastUserInputs.prototype.first_change = ['#delta', '#sdate'];
+    LastUserInputs.prototype.first_change = ['#edate', '#delta'];
 
     LastUserInputs.prototype.history = [];
 

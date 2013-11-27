@@ -257,7 +257,7 @@ dateRanger = (init) ->
     and provide suggestions.
     ###
     full_list: ['#sdate', '#delta', '#edate']
-    first_change: ['#delta', '#sdate'],  # init state
+    first_change: ['#edate', '#delta'],  # init state on BJs recommendation
     history: []
     updated: (new_id) ->
       if new_id in @history
