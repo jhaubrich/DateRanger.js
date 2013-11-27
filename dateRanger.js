@@ -286,9 +286,9 @@ dateRanger = function(init) {
     */
 
 
-    LastUserInputs.prototype.full_list = ['#sdate', '#delta', '#edate'];
+    LastUserInputs.prototype.full_list = ['#edate', '#sdate', '#delta'];
 
-    LastUserInputs.prototype.first_change = ['#edate', '#delta'];
+    LastUserInputs.prototype.change_me_first = ['#edate', '#delta'];
 
     LastUserInputs.prototype.history = [];
 
@@ -321,31 +321,29 @@ dateRanger = function(init) {
       }
     };
 
-    LastUserInputs.prototype.suggest = function(current_id) {
+    LastUserInputs.prototype.suggest = function(changing_box) {
       /* Smartly suggests the input box to be changed.
       */
 
       var absent_id;
 
       if (this.history.length === 0) {
-        if (__indexOf.call(this.first_change, current_id) >= 0) {
-          if (current_id !== this.first_change[0]) {
-            return this.first_change[0];
-          } else {
-            return this.first_change[1];
+        if (__indexOf.call(this.change_me_first, changing_box) >= 0) {
+          if (changing_box === this.change_me_first[0]) {
+            return this.change_me_first[1];
           }
         } else {
-          return this.first_change[0];
+          return this.change_me_first[0];
         }
       }
       if (this.history.length === 1) {
-        if (absent_id = this.absent(this.history.concat(current_id))) {
+        if (absent_id = this.absent(this.history.concat(changing_box))) {
           return absent_id;
         } else {
-          return this.first_change[0];
+          return this.change_me_first[0];
         }
       }
-      if (__indexOf.call(this.history, current_id) >= 0) {
+      if (__indexOf.call(this.history, changing_box) >= 0) {
         return this.absent(this.history);
       } else {
         return this.history[0];

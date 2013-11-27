@@ -256,8 +256,10 @@ dateRanger = (init) ->
     ### keep track of the order in which boxes are edited,
     and provide suggestions.
     ###
-    full_list: ['#sdate', '#delta', '#edate']
-    first_change: ['#edate', '#delta'],  # init state on BJs recommendation
+
+    full_list: ['#edate', '#sdate', '#delta']
+    # change_me_first: ['#delta', '#sdate'],  # init state
+    change_me_first: ['#edate', '#delta'],  # init state on BJs recommendation
     history: []
     updated: (new_id) ->
       if new_id in @history
@@ -277,25 +279,28 @@ dateRanger = (init) ->
         if id not in list
           return id
 
-    suggest: (current_id) ->
+    suggest: (changing_box) ->
       ### Smartly suggests the input box to be changed.
       ###
+      # Initial State (on page load):
       if @history.length == 0
-        if current_id in @first_change
-          if current_id != @first_change[0]
-            return @first_change[0]
-          else
-            return @first_change[1]
+        if changing_box in @change_me_first
+          if changing_box == @change_me_first[0]
+            return @change_me_first[1]
         else
-          return @first_change[0]
+          return @change_me_first[0]
 
+      # One box has been changed: Suggest the one that
+      # hasn't been changed.
       if @history.length == 1
-        if absent_id = @absent(@history.concat current_id)
+        if absent_id = @absent(@history.concat changing_box)
           return absent_id
         else
-          return @first_change[0]
+          return @change_me_first[0]
 
-      if current_id in @history
+      # Steady State: See if one is missing from the
+      # history, otherwise return the oldest.
+      if changing_box in @history
         # find the inputbox the user didn't touch
         return @absent(@history)
       else
