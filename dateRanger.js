@@ -204,7 +204,7 @@ dateRanger = function(init) {
       if ((old_sdate - sdate) !== 0) {
         if (sdate) {
           suggested = lui.suggest('#sdate');
-          if (suggested === "#delta") {
+          if (suggested === '#delta') {
             if (edate > sdate) {
               delta = edate - sdate;
               $('#delta').val(hms(delta));
@@ -215,15 +215,15 @@ dateRanger = function(init) {
               highlight_update('#edate');
             }
           }
-          if (suggested === "#edate") {
+          if (suggested === '#edate') {
             edate = new Date(+sdate + delta);
             $('#edate').val(iso(edate));
             highlight_update('#edate');
           }
-          lui.updated("#sdate");
+          lui.updated('#sdate');
           return true;
         } else {
-          highlight_error("#sdate");
+          highlight_error('#sdate');
         }
       }
     }
@@ -288,8 +288,6 @@ dateRanger = function(init) {
 
     LastUserInputs.prototype.full_list = ['#edate', '#sdate', '#delta'];
 
-    LastUserInputs.prototype.change_me_first = ['#edate', '#delta'];
-
     LastUserInputs.prototype.history = [];
 
     LastUserInputs.prototype.updated = function(new_id) {
@@ -325,22 +323,27 @@ dateRanger = function(init) {
       /* Smartly suggests the input box to be changed.
       */
 
-      var absent_id;
+      var absent_id, suggested_change;
 
       if (this.history.length === 0) {
-        if (__indexOf.call(this.change_me_first, changing_box) >= 0) {
-          if (changing_box === this.change_me_first[0]) {
-            return this.change_me_first[1];
+        suggested_change = (function() {
+          switch (false) {
+            case changing_box !== '#sdate':
+              return '#edate';
+            case changing_box !== '#delta':
+              return '#sdate';
+            case changing_box !== '#edate':
+              return '#sdate';
           }
-        } else {
-          return this.change_me_first[0];
-        }
+        })();
+        return suggested_change;
       }
       if (this.history.length === 1) {
+        console.log(this.absent(this.history.concat(changing_box)));
         if (absent_id = this.absent(this.history.concat(changing_box))) {
           return absent_id;
         } else {
-          return this.change_me_first[0];
+          return '#delta';
         }
       }
       if (__indexOf.call(this.history, changing_box) >= 0) {

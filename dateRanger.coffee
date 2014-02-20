@@ -186,26 +186,27 @@ dateRanger = (init) ->
       if (old_sdate - sdate) != 0
         if sdate  # null if not valid date
           suggested = lui.suggest('#sdate')
-          if suggested is "#delta"
+          if suggested is '#delta'
             # update #delta
             if edate > sdate
               delta = edate - sdate
               $('#delta').val(hms delta)
               highlight_update '#delta'
             else if sdate > edate
-              # update edate
+              # They changed sdate to a future date.
+              # Assume they want the same interval starting at a different time.
               edate = new Date(+sdate + delta)
               $('#edate').val(iso edate)
               highlight_update '#edate'
-          if suggested is "#edate"
+          if suggested is '#edate'
             # update edate
             edate = new Date(+sdate + delta)
             $('#edate').val(iso edate)
             highlight_update '#edate'
-          lui.updated("#sdate")
+          lui.updated('#sdate')
           return yes
         else
-          highlight_error("#sdate")
+          highlight_error('#sdate')
 
     if id == 'edate'
       old_edate = edate
@@ -258,8 +259,6 @@ dateRanger = (init) ->
     ###
 
     full_list: ['#edate', '#sdate', '#delta']
-    # change_me_first: ['#delta', '#sdate'],  # init state
-    change_me_first: ['#edate', '#delta'],  # init state on BJs recommendation
     history: []
     updated: (new_id) ->
       if new_id in @history
@@ -284,19 +283,20 @@ dateRanger = (init) ->
       ###
       # Initial State (on page load):
       if @history.length == 0
-        if changing_box in @change_me_first
-          if changing_box == @change_me_first[0]
-            return @change_me_first[1]
-        else
-          return @change_me_first[0]
+        suggested_change = switch
+          when changing_box == '#sdate' then '#edate'
+          when changing_box == '#delta' then '#sdate'
+          when changing_box == '#edate' then '#sdate'
+        return suggested_change
 
       # One box has been changed: Suggest the one that
       # hasn't been changed.
       if @history.length == 1
+        console.log @absent(@history.concat changing_box)
         if absent_id = @absent(@history.concat changing_box)
           return absent_id
         else
-          return @change_me_first[0]
+          return '#delta'
 
       # Steady State: See if one is missing from the
       # history, otherwise return the oldest.
